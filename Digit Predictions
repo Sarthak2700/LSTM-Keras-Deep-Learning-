@@ -1,0 +1,27 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from tensorflow.keras.models import load_model
+from PIL import Image
+
+model = load_model('mnist_cnn_model.h5')
+
+def preprocess_image(img_path):
+    img = Image.open(img_path).convert('L').resize((28, 28))
+    img = np.array(img).astype('float32') / 255
+    return img.reshape(1, 28, 28, 1)
+
+def predict_digit(img_path):
+    img = preprocess_image(img_path)
+    prediction = model.predict(img)
+    return np.argmax(prediction)
+
+img_path = '/content/three.png'
+predicted_digit = predict_digit(img_path)
+print(f'Predicted Digit: {predicted_digit}')
+
+img = Image.open(img_path)
+plt.imshow(img, cmap='rgb
+')
+plt.title(f'Predicted Digit: {predicted_digit}')
+plt.axis('off')
+plt.show()
